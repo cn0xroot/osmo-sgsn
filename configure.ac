@@ -50,11 +50,11 @@ PKG_CHECK_MODULES(LIBOSMOSIGTRAN, libosmo-sigtran) # TODO version?
 PKG_CHECK_MODULES(LIBCRYPTO, libcrypto >= 0.9.5)
 
 # Enable/disable 3G aka IuPS + IuCS support?
-AC_ARG_ENABLE([iu], [AS_HELP_STRING([--enable-iu], [Build 3G support, aka IuPS and IuCS interfaces])],
-    [osmo_ac_iu="$enableval"],[osmo_ac_iu="no"])
+AC_ARG_ENABLE([iu], [AS_HELP_STRING([--disable-iu], [Build without 3G support, i.e. without IuPS and IuCS interfaces])],
+    [osmo_ac_iu="$enableval"],[osmo_ac_iu="yes"])
 if test "x$osmo_ac_iu" = "xyes" ; then
-    PKG_CHECK_MODULES(LIBASN1C, libasn1c) # TODO version?
-    PKG_CHECK_MODULES(LIBOSMORANAP, libosmo-ranap) # TODO version?
+    PKG_CHECK_MODULES(LIBASN1C, libasn1c, [], [AC_MSG_ERROR(libasn1c not found. Build with --disable-iu?)]) # TODO version?
+    PKG_CHECK_MODULES(LIBOSMORANAP, libosmo-ranap, [], [AC_MSG_ERROR(libosmo-ranap not found. Build with --disable-iu?)]) # TODO version?
     AC_DEFINE(BUILD_IU, 1, [Define if we want to build IuPS and IuCS interfaces support])
 fi
 AM_CONDITIONAL(BUILD_IU, test "x$osmo_ac_iu" = "xyes")
